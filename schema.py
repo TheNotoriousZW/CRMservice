@@ -3,7 +3,6 @@ from pydantic import BaseModel
 
 class AddCompany(BaseModel):
     name: str
-    description: str
     phone_number: str
     email: str
     address: str

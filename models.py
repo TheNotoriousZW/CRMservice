@@ -5,9 +5,8 @@ from datetime import datetime
 class Company(base):
     __tablename__ = "companies"
     
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String, index=True)
-    description = Column(String)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now)
     phone_number = Column(String)
@@ -31,8 +30,8 @@ class Customer(base):
     phone = Column(String)
     address = Column(String)
     user_id = Column(Integer, ForeignKey("users.id"))
-    created_at = Column(DateTime(timezone=True))
-    updated_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime(timezone=True), default=datetime.now)
+    updated_at = Column(DateTime(timezone=True), default=datetime.now)
     
     # Relationship
     company_id = Column(Integer, ForeignKey("companies.id"))
@@ -48,8 +47,8 @@ class Appointment(base):
     duration = Column(Integer)  # in minutes
     status = Column(String, default="scheduled")  # scheduled, completed, cancelled
     notes = Column(String)
-    created_at = Column(DateTime(timezone=True))
-    updated_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime(timezone=True), default=datetime.now)
+    updated_at = Column(DateTime(timezone=True), default=datetime.now)
     
     # Relationship
     customer =  Column(String, ForeignKey("customers.id"))     
@@ -57,9 +56,9 @@ class Appointment(base):
 class CompanyNumber(base):
     __tablename__ = "company_numbers"
     
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     number = Column(String, unique=True, nullable=False)
     company_id = Column(Integer, ForeignKey("companies.id"))
-    created_at = Column(DateTime(timezone=True))
-    updated_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime(timezone=True), default=datetime.now)
+    updated_at = Column(DateTime(timezone=True), default=datetime.now)
     
