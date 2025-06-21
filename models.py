@@ -11,13 +11,13 @@ class Company(base):
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now)
     phone_number = Column(String)
-    work_phone_number = Column(String)
+    company_number = Column(Integer, ForeignKey("company_numbers.id"), unique=True, nullable=False, )
     email = Column(String)
     address = Column(String)
     city = Column(String)
     state = Column(String)
     zip_code = Column(String)
-    country = Column(String)
+    country = Column(String, default="US")
     subscription_status = Column(String)
     
 
@@ -53,3 +53,13 @@ class Appointment(base):
     
     # Relationship
     customer =  Column(String, ForeignKey("customers.id"))     
+
+class CompanyNumber(base):
+    __tablename__ = "company_numbers"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    number = Column(String, unique=True, nullable=False)
+    company_id = Column(Integer, ForeignKey("companies.id"))
+    created_at = Column(DateTime(timezone=True))
+    updated_at = Column(DateTime(timezone=True))
+    
