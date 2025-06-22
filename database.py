@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.ext.declarative import declarative_base
 from dotenv import load_dotenv
 import os
@@ -10,6 +10,6 @@ DATABASE_URL = f"postgresql://postgres:{os.getenv("POSTGRES_PQ")}@localhost:5432
 
 engine = create_engine(DATABASE_URL)
 
-session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 base = declarative_base()

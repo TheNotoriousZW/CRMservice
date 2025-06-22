@@ -2,6 +2,16 @@ from database import base
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from datetime import datetime
 
+class Application(base):
+    __tablename__ = "applications"
+    
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name = Column(String, index=True)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now)
+    application_id = Column(String)
+    private_key = Column(String)
+
 class Company(base):
     __tablename__ = "companies"
     
@@ -10,7 +20,6 @@ class Company(base):
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, default=datetime.now)
     phone_number = Column(String)
-    company_number = Column(Integer, ForeignKey("company_numbers.id"), unique=True, nullable=False, )
     email = Column(String)
     address = Column(String)
     city = Column(String)
@@ -18,7 +27,8 @@ class Company(base):
     zip_code = Column(String)
     country = Column(String, default="US")
     subscription_status = Column(String)
-    
+    application_id = Column(Integer, ForeignKey("applications.id"))
+     
 
 
 class Customer(base):
@@ -35,7 +45,7 @@ class Customer(base):
     
     # Relationship
     company_id = Column(Integer, ForeignKey("companies.id"))
-    appointments = Column(String, ForeignKey("appointments.id"))
+    
 
 class Appointment(base):
     __tablename__ = "appointments"

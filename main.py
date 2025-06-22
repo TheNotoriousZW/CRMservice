@@ -1,18 +1,20 @@
 from langchain_core.prompts import PromptTemplate
+import os
 from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, START, END
 from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from database import engine, session, base
+from database import engine, SessionLocal, base
 from schema import AddCompany
 from typing import Annotated
 from models import Company, CompanyNumber
 from vonage import Auth, Vonage
 from vonage_numbers import NumberParams, NumbersStatus
-from utils import find_number
+from utils import find_number, buy_number, create_application
 from schema import AddCompany
+
 
 # Create all tables
 base.metadata.create_all(bind=engine)
@@ -21,13 +23,14 @@ app = FastAPI(title="CRM Service API")
 
 # Dependency to get database session
 def get_db():
-    db = session()
+    db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
 
 db = Annotated[Session, Depends(get_db)]
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to CRM Service API"}
@@ -37,7 +40,17 @@ def health_check():
     return {"status": "healthy", "database": "connected"}
 
 @app.post("/create_company")
-async def create_company(company: AddCompany, db: db, number: CompanyNumber):
+async def create_company(company: AddCompany, db: db):
+    # find available number 
+    number = find_number(os.getenv("VONAGE_API_KEY"), os.getenv("VONAGE_SECRET_KEY"), company.country)
+    if not number:
+        return JSONResponse(status_code=400, content={"message": "No number found"})
+    # buy number
+    number = buy_number(number, company.country)
+    if not number:
+        return JSONResponse(status_code=400, content={"message": "Failed to buy number"})
+    # create application 
+    application = create_application()
     db_company = Company(name=company.name,
                          phone_number=company.phone_number,
                          company_number=find_number(),
