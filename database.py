@@ -6,7 +6,7 @@ import os
 
 load_dotenv()
 
-DATABASE_URL = f"postgresql://postgres:{os.getenv("POSTGRES_PQ")}@localhost:5432/CommunicationLayer"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_engine(DATABASE_URL)
 

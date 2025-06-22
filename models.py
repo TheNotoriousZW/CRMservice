@@ -39,7 +39,6 @@ class Customer(base):
     email = Column(String)
     phone = Column(String)
     address = Column(String)
-    user_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime(timezone=True), default=datetime.now)
     updated_at = Column(DateTime(timezone=True), default=datetime.now)
     
@@ -61,7 +60,7 @@ class Appointment(base):
     updated_at = Column(DateTime(timezone=True), default=datetime.now)
     
     # Relationship
-    customer =  Column(String, ForeignKey("customers.id"))     
+    customer =  Column(Integer, ForeignKey("customers.id"))     
 
 class CompanyNumber(base):
     __tablename__ = "company_numbers"
