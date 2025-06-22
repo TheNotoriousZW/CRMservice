@@ -12,7 +12,7 @@ from typing import Annotated
 from models import Company, CompanyNumber
 from vonage import Auth, Vonage
 from vonage_numbers import NumberParams, NumbersStatus
-from utils import find_number, buy_number, create_application
+from utils import find_number, buy_number, create_application, get_vonage_region
 from schema import AddCompany
 
 
@@ -50,6 +50,7 @@ async def create_company(company: AddCompany, db: db):
     if not number:
         return JSONResponse(status_code=400, content={"message": "Failed to buy number"})
     # create application 
+    region = get_vonage_region(company.country, company.state, company.zip_code)
     application = create_application()
     db_company = Company(name=company.name,
                          phone_number=company.phone_number,
