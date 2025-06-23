@@ -37,7 +37,7 @@ def find_number( api_key: str | None, api_secret: str | None, country: str = "US
         country=country,
         search_pattern=None,  # Add empty search pattern
         size=1,            # Request 1 number
-        index=0            # Start from first result
+        index=1            # Start from first result
     ))[0][0]
 
     if not available:
@@ -216,3 +216,12 @@ def get_vonage_region(
     # Default fallback
     return Region.EU_WEST
 
+
+def get_list_of_applications():
+    client = Vonage(Auth(api_key=api_key, api_secret=api_secret))
+    applications = client.application.list_applications()
+    return applications
+    
+
+
+print(get_list_of_applications())

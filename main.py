@@ -51,10 +51,11 @@ async def create_company(company: AddCompany, db: db):
         return JSONResponse(status_code=400, content={"message": "Failed to buy number"})
     # create application 
     region = get_vonage_region(company.country, company.state, company.zip_code)
-    application = create_application()
+    application = create_application(db, region, str(region), os.getenv("VONAGE_API_KEY"), os.getenv("VONAGE_SECRET_KEY"))
     db_company = Company(name=company.name,
                          phone_number=company.phone_number,
-                         company_number=find_number(),
+                         company_number=number,
+                         application_id=application.id,
                          email=company.email,
                          address=company.address,
                          city=company.city,
